@@ -7,7 +7,7 @@ let i = 0;
 
 //fetch page 1 of characters
 let loadAPI = function(p) {
-  console.log(p);
+  //console.log(p);
   charactersNode.innerHTML = "";
   fetch(`https://swapi.co/api/people/?page=${p}`)
     .then(function(response) {
@@ -26,18 +26,27 @@ let loadAPI = function(p) {
         charactersNode.appendChild(characterName);
 
         //get character films
-        item.films;
+        filmsArr = item.films;
+        console.log(item.films);
 
-        //fetch film APIs
-
-        //fetch film titles
-
-        //push title into parent character name
-        const characterFilm = document.createElement("p");
-        characterFilm.innerHTML = `${item.films}`;
-        characterName.appendChild(characterFilm);
+        //Loop throug filmsArr
+        filmsArr.forEach(function(item) {
+          //fetch film APIs
+          fetch(`${item}`)
+            .then(function(response) {
+              return response.json();
+            })
+            .then(function(body) {
+              //fetch film titles
+              console.log(body.title);
+              //push title into parent character name
+              const characterFilm = document.createElement("p");
+              characterFilm.innerHTML = `${body.title}`;
+              characterName.appendChild(characterFilm);
+            });
+        });
       });
-      console.log(charactersCount);
+      //console.log(charactersCount);
       //generate buttons
       if (i === 0) {
         count(charactersCount);
@@ -49,7 +58,7 @@ let loadAPI = function(p) {
 //inital API load
 loadAPI(p);
 
-console.log(charactersCount);
+//console.log(charactersCount);
 //function to create buttons
 function count(charactersCount) {
   //no. of pages to create
@@ -67,4 +76,9 @@ buttonsNode.addEventListener("click", function(event) {
   p = event.target.textContent;
   console.log(p);
   loadAPI(p);
+});
+
+//listen to character name being clicked through characters container
+charactersNode.addEventListener("click", function(event) {
+  console.log(event);
 });
